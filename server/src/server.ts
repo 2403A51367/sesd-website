@@ -39,6 +39,12 @@ app.use('/api/buses', busRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
+// Support direct routes if /api prefix is stripped by serverless proxy
+app.use('/auth', authRoutes);
+app.use('/buses', busRoutes);
+app.use('/bookings', bookingRoutes);
+app.use('/dashboard', dashboardRoutes);
+
 // 404 Handler
 app.use((req: Request, res: Response) => {
   res.status(404).json({ error: `Cannot ${req.method} ${req.path}` });
@@ -50,7 +56,11 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ error: 'Internal Server Error', message: err?.message || 'Unknown error' });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 CampusRide API Server running on http://localhost:${PORT}`);
-  console.log(`📡 Health check available at http://localhost:${PORT}/api/health`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 CampusRide API Server running on http://localhost:${PORT}`);
+    console.log(`📡 Health check available at http://localhost:${PORT}/api/health`);
+  });
+}
+
+export default app;
