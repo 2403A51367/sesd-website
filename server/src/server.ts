@@ -1,11 +1,14 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
 import authRoutes from './routes/authRoutes';
 import busRoutes from './routes/busRoutes';
 import bookingRoutes from './routes/bookingRoutes';
 import dashboardRoutes from './routes/dashboardRoutes';
 
+// Load single merged root .env file
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 dotenv.config();
 
 const app = express();
